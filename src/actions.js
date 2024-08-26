@@ -89,20 +89,52 @@ const viewEmployeesByDepartment = async (department_id) => {
 
 // Delete a department
 const deleteDepartment = async (department_id) => {
-    await client.query('DELETE FROM department WHERE id = $1', [department_id]);
-    console.log('Department deleted');
+    try {
+        if (!department_id) {
+            console.log('Invalid department ID. Please select a valid department to delete.');
+            return;
+        }
+
+        // First, delete all roles associated with the department
+        await client.query('DELETE FROM role WHERE department_id = $1', [department_id]);
+
+        // Then, delete the department itself
+        await client.query('DELETE FROM department WHERE id = $1', [department_id]);
+
+        console.log('Department and associated roles deleted successfully.');
+    } catch (err) {
+        console.error('Error deleting department:', err);
+    }
 };
 
 // Delete a role
 const deleteRole = async (role_id) => {
-    await client.query('DELETE FROM role WHERE id = $1', [role_id]);
-    console.log('Role deleted');
+    try {
+        if (!role_id) {
+            console.log('Invalid role ID. Please select a valid role to delete.');
+            return;
+        }
+
+        await client.query('DELETE FROM role WHERE id = $1', [role_id]);
+        console.log('Role deleted successfully.');
+    } catch (err) {
+        console.error('Error deleting role:', err);
+    }
 };
 
 // Delete an employee
 const deleteEmployee = async (employee_id) => {
-    await client.query('DELETE FROM employee WHERE id = $1', [employee_id]);
-    console.log('Employee deleted');
+    try {
+        if (!employee_id) {
+            console.log('Invalid employee ID. Please select a valid employee to delete.');
+            return;
+        }
+
+        await client.query('DELETE FROM employee WHERE id = $1', [employee_id]);
+        console.log('Employee deleted successfully.');
+    } catch (err) {
+        console.error('Error deleting employee:', err);
+    }
 };
 
 // View the total utilized budget of a department
