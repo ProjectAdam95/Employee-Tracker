@@ -80,10 +80,10 @@ const getEmployeeDetailsPrompt = (roles, managers) => [
         name: 'manager_id',
         message: "Select the employee's manager:",
         choices: managers
-            .filter(manager => manager.id !== null && manager.id !== undefined)  // Filter out invalid managers
+            .filter(manager => manager.id !== null && manager.id !== undefined)
             .map(manager => ({
-                name: `${manager.first_name} ${manager.last_name}`,  // Display manager's full name
-                value: manager.id  // Use manager's ID as the value
+                name: `${manager.first_name} ${manager.last_name}`,
+                value: manager.id
             }))
     }
 ];
@@ -126,10 +126,10 @@ const getUpdateEmployeeManagerPrompt = (employees, managers) => [
         name: 'manager_id',
         message: 'Select the new manager for the employee:',
         choices: managers
-            .filter(manager => manager.id !== null && manager.id !== undefined)  // Filter out invalid managers
+            .filter(manager => manager.id !== null && manager.id !== undefined)
             .map(manager => ({
-                name: `${manager.first_name} ${manager.last_name}`,  // Display manager's full name
-                value: manager.id  // Use manager's ID as the value
+                name: `${manager.first_name} ${manager.last_name}`,
+                value: manager.id
             }))
     }
 ];
@@ -140,10 +140,10 @@ const getManagerSelectionPrompt = (managers) => ({
     name: 'manager_id',
     message: 'Select a manager to view their employees:',
     choices: managers
-        .filter(manager => manager.id !== null && manager.id !== undefined)  // Filter out invalid managers
+        .filter(manager => manager.id !== null && manager.id !== undefined)
         .map(manager => ({
-            name: `${manager.first_name} ${manager.last_name}`,  // Display manager's full name
-            value: manager.id  // Use manager's ID as the value
+            name: `${manager.first_name} ${manager.last_name}`,
+            value: manager.id
         }))
 });
 
@@ -163,10 +163,23 @@ const getDeleteSelectionPrompt = (items, type) => ({
     type: 'list',
     name: `${type}_id`,
     message: `Select the ${type} to delete:`,
-    choices: items.map(item => ({
-        name: item.name || `${item.first_name} ${item.last_name}`,  // Handle both department names and employee names
-        value: item.id
-    }))
+    choices: items.map(item => {
+        let itemName;
+
+        // Determine the display name based on the type
+        if (type === 'role') {
+            itemName = item.title; 
+        } else if (type === 'employee') {
+            itemName = `${item.first_name} ${item.last_name}`; 
+        } else {
+            itemName = item.name; 
+        }
+
+        return {
+            name: itemName, 
+            value: item.id  
+        };
+    })
 });
 
 module.exports = {
@@ -180,5 +193,3 @@ module.exports = {
     getDepartmentSelectionPrompt,
     getDeleteSelectionPrompt
 };
-
-

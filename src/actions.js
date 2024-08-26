@@ -95,10 +95,10 @@ const deleteDepartment = async (department_id) => {
             return;
         }
 
-        // First, delete all roles associated with the department
+      
         await client.query('DELETE FROM role WHERE department_id = $1', [department_id]);
 
-        // Then, delete the department itself
+        
         await client.query('DELETE FROM department WHERE id = $1', [department_id]);
 
         console.log('Department and associated roles deleted successfully.');
